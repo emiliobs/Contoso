@@ -2,17 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contoso.Data;
+using Contoso.Models.SchoolViewModels;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace Contoso.Pages
 {
     public class AboutModel : PageModel
     {
-        public string Message { get; set; }
+     private readonly ApplicationDbContext db;
 
-        public void OnGet()
+        public AboutModel(ApplicationDbContext db)
         {
-            Message = "Your application description page.";
+            this.db = db;
         }
+
+
+        public IList<EnrollmentDateGroup> Student { get; set; }
+
+        public async Task OnGetAsync()
+        {
+
+
+            IQueryable<EnrollmentDateGroup> data = from student
+                                                   in db.Students
+                                                    group student 
+                                                    by student.EnrollmentDate 
+                                                    into dateGroup
+                                                    select new EnrollmentDateGroup()
+                                                    {
+                                                        EnrollmentData = dateGroup.Key,
+                                                        StudentCount = dateGroup.Count()
+                                                    };
+
+                Student = await data.AsNoTracking().ToListAsync();
+        }
+
+       
     }
 }

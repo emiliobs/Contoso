@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Contoso.Models;
 
 namespace Contoso.Data
 {
@@ -12,5 +13,8 @@ namespace Contoso.Data
             : base(options)
         {
         }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
     }
 }
